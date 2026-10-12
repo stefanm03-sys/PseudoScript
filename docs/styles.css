@@ -1,0 +1,14 @@
+body {
+    margin: 0, auto;
+    padding: 20, auto;
+}
+
+h1, h2, ul, li, p {
+    text-align: center;
+}
+
+#in, #out, #exec {
+    outline: solid;
+    object-position: center! ;
+    text-align: center! ;
+}
