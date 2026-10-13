@@ -3,7 +3,7 @@ import os.path
 
 fext = ".psc"
 fname = "script"
-pack = "./pseudoscriptpackage"
+pack = "./pscpackage"
 testscript = "./examplescript.psc"
 
 line = " "
@@ -120,7 +120,7 @@ class operands:
 
 class type:
     def entry(self, init):
-        self.pscnum = pscnum
+        self.pscint = pscint
         self.pscstr = pscstr
         self.pscfloat = pscfloat
         self.pscT = pscT

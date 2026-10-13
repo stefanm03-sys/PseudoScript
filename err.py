@@ -1,4 +1,5 @@
 import err
 import pathlib
 import os.path
-interp = "./define.py"
+import define
+interp = "./pscpackage/define.py"
