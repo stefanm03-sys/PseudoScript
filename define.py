@@ -4,11 +4,12 @@ extension = ".psc"
 filename = "script"
 testscript = "./script.psc"
 line = " "
-num = "num"
-deci = "deci"
-text = "text"
-true = "true"
-false = "false"
+pscint = "num"
+pscfloat = "deci"
+pscstr = "text"
+pscT = "true"
+pscF = "false"
+pscN = "nothing"
 with open(testscript, "r") as f:
     contents = f.read()
     contents = contents.splitlines()
@@ -107,11 +108,44 @@ class operands:
         return self.expr
 
     def comment(self, init):
-        self.line = self.r
-        self.r = ""
+        self.line = line
+        self.r = " "
         self.a = "//"
         if self.a and self.r:
-            print(str(self.a and self.r))
+            return print(str(self.a and self.r))
+
+class type:
+    def entry(self, init):
+        self.pscnum = pscnum
+        self.pscstr = pscstr
+        self.pscfloat = pscfloat
+        self.pscT = pscT
+        self.pscF = pscF
+        self.pscN = pscN
+    
+    def typebool(self, init):
+        if self.pscT in line:
+            return True
+        elif self.pscF in line:
+            return False
+        elif self.pscN in line:
+            return None
+        else:
+            return 0
+            
+    def typenum(self, init):
+        if self.pscint in line:
+            return int()
+        elif self.pscfloat in line:
+            return float()
+        else:
+            return 0
+            
+    def typestr(self, init):
+        if self.pscstr in line:
+            return str()
+        else:
+            return 0
 
 """"""
 
@@ -124,17 +158,17 @@ def calc(line):
     remainder = math.remainder
     line = math.entry
     for line in contents:
-        if line == math.add.expr:
+        if line == math.add:
             return math.add
-        elif line == math.sub.expr:
+        elif line == math.sub:
             return math.sub
-        elif line == math.div.expr:
+        elif line == math.div:
             return math.div
-        elif line == math.mul.expr:
+        elif line == math.mul:
             return math.mul
-        elif line == math.remainder.expr:
+        elif line == math.remainder:
             return math.remainder
-        elif line == math.floordiv.expr:
+        elif line == math.floordiv:
             return math.floordiv
         else:
             return False
@@ -146,13 +180,13 @@ def operate(line):
     log = operands.log
     line = operands.entry
     for line in contents:
-        if line == operands.regvar.expr:
+        if line == operands.regvar:
             return operands.regvar
-        elif line == operands.fixvar.expr:
+        elif line == operands.fixvar:
             return operands.fixvar
-        elif line == operands.ampersand.expr:
+        elif line == operands.ampersand:
             return operands.ampersand
-        elif line == operands.log.expr:
+        elif line == operands.log:
             return operands.log
         else:
             return False
