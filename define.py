@@ -1,8 +1,11 @@
 import pathlib
 import os.path
-extension = ".psc"
-filename = "script"
-testscript = "./script.psc"
+
+fext = ".psc"
+fname = "script"
+pack = "./pseudoscriptpackage"
+testscript = "./examplescript.psc"
+
 line = " "
 pscint = "num"
 pscfloat = "deci"
@@ -10,6 +13,7 @@ pscstr = "text"
 pscT = "true"
 pscF = "false"
 pscN = "nothing"
+
 with open(testscript, "r") as f:
     contents = f.read()
     contents = contents.splitlines()
