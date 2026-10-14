@@ -1,14 +1,17 @@
 import pathlib
 import os.path
+# This is the building block of pseudoscript to define all of the code.
 
 fext = ".psc"
 fname = "script"
 pack = "./pscpackage"
 testscript = "./examplescript.psc"
-
+standard = "./.psc"
 line = " "
-pscint = "num"
-pscfloat = "deci"
+
+# These are the strings for the types in psc.
+pscint = "number"
+pscfloat = "decimal"
 pscstr = "text"
 pscT = "true"
 pscF = "false"
@@ -203,12 +206,9 @@ def execute():
             operate(line)
             # calc(line)
 
-execute()
 name = any
 value = any
 const = any
 vars = [
     {name, value, const}
 ]
-print("{0}".format(vars))
-print("ended")
