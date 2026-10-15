@@ -1,5 +1,6 @@
 import pathlib
 import os.path
+import inspect
 # This is the building block of pseudoscript to define all of the code.
 
 fext = ".psc"
@@ -72,6 +73,12 @@ class operands:
         self.c = any
         self.r = any
         operands.entry.line = self.r
+    
+    def parentheses(self, init):
+        self.a = "("
+        self.r = any
+        self.b = ")"
+        self.expr = "{0} {1} {2}".format(self.a, self.r, self.b)
         
     def regvar(self, init):
         self.b = "var"
@@ -79,7 +86,7 @@ class operands:
         self.r = name
         self.c = const
         self.line = self.b and self.a
-        self.expr = "{0} {1}".format(self.r, self.a)
+        self.expr = "{0} {1} {2}".format(self.b, self.r, self.a)
         vars.append(self.a.value)
         vars.append(self.r.name)
         return self.expr
@@ -90,7 +97,7 @@ class operands:
         self.r = name
         self.c = const
         self.line = self.b and self.a
-        self.expr = "{0} {1}".format(self.r, self.a)
+        self.expr = "{0} {1} {2}".format(self.b, self.r, self.a)
         vars.append(self.a.value)
         vars.append(self.r.name)
         vars.append(self.c.const)
@@ -103,16 +110,20 @@ class operands:
         return self.expr
     
     def log(self, init):
+        self.method = operands.parentheses
         self.a = any
         self.r = line
-        self.expr = "log(\"{0}\")".format(self.a)
+        self.expr = "log{0}{1}{2})".format(self.method.a, self.r, self.method.b)
+        print(self.expr)
+        """
         if self.a == str:
             print(self.r)
         elif self.a == "true" or self.a == "false":
             print(self.r)
         else:
             print(float(self.r))
-        return self.expr
+        return self.expr 
+        """
 
     def comment(self, init):
         self.line = line
@@ -155,16 +166,48 @@ class type:
             return 0
 
 """"""
+type_inst = type()
+math_inst = math()
+ops_inst = operands()
 
-def calc(line):
-    add = math.add
-    sub = math.sub
-    div = math.div
-    mul = math.mul
-    floordiv = math.floordiv
-    remainder = math.remainder
-    line = math.entry
+def interpret(line):
+    methods = {
+    # Key
+    "parentheses": ops_inst.parentheses,
+    "comment": ops_inst.comment,
+    "ampersand": ops_inst.ampersand,
+    "bool": type_inst.typebool,
+    "int": type_inst.typenum,
+    "str": type_inst.typestr,
+
+    # Math
+    "add": math_inst.add,
+    "sub": math_inst.sub,
+    "div": math_inst.div,
+    "mul": math_inst.mul,
+    "floordiv": math_inst.floordiv,
+    "remainder": math_inst.remainder,
+    "line": math_inst.entry,
+
+    # Operands
+    "log": ops_inst.log,
+    "regvar": ops_inst.regvar,
+    "fixvar": ops_inst.fixvar,
+    }
     for line in contents:
+        print(line)
+        for method in methods:
+            if line.isidentifier() and hasattr(methods[method], line):
+                return method
+            else:
+                return method and False and exit
+                
+    """
+    for line in contents:
+        for line in methods:
+            return methods
+        else:
+            return False
         if line == math.add:
             return math.add
         elif line == math.sub:
@@ -179,13 +222,7 @@ def calc(line):
             return math.floordiv
         else:
             return False
-
-def operate(line):
-    regvar = operands.regvar
-    fixvar = operands.fixvar
-    ampersand = operands.ampersand
-    log = operands.log
-    line = operands.entry
+        
     for line in contents:
         if line == operands.regvar:
             return operands.regvar
@@ -197,15 +234,15 @@ def operate(line):
             return operands.log
         else:
             return False
+    """
 
 def execute():
     print("Starting..")
     with open(testscript, "r") as f:
-        for line in contents:
-            print(line)
-            operate(line)
+        print(line)
+        interpret(line)
             # calc(line)
-
+execute()
 name = any
 value = any
 const = any
