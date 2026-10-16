@@ -1,8 +1,7 @@
-numver=0.0
-strver="demo1"
+ver="demo1-0.0"
 package="./pscpackage"
 definer="./pscpackage/define.py"
-echo "PseudoScript v"$numver $strver""
+echo "PseudoScript v"$ver""
 cd $package
 if pwd "$package"; then
     echo "The package was found! Welcome, user!"

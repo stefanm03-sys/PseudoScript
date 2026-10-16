@@ -8,7 +8,6 @@ fname = "script"
 pack = "./pscpackage"
 testscript = "./examplescript.psc"
 standard = "./.psc"
-line = " "
 
 # These are the strings for the types in psc.
 pscint = "number"
@@ -18,6 +17,13 @@ pscT = "true"
 pscF = "false"
 pscN = "nothing"
 
+name = any
+value = any
+const = any
+vars = {
+    "{0}".format(name): (value, const),
+
+}
 with open(testscript, "r") as f:
     contents = f.read()
     contents = contents.splitlines()
@@ -31,40 +37,60 @@ class math:
         math.entry.line = self.r
         
     def add(self, init):
-        self.line = self.r
+        self.a = 0
+        self.b = 0
+        self.c = line
         self.r = int(self.a + self.b)
         self.expr = "{0} + {1}".format(self.a, self.b)
-        return self.expr
+        if self.c.rstrip() == self.expr:
+            return self.r
 
     def sub(self, init):
-        self.line = self.r
+        self.a = 0
+        self.b = 0
+        self.c = line
         self.r = int(self.a - self.b)
         self.expr = "{0} - {1}".format(self.a, self.b)
-        return self.expr
-        
+        if self.c.rstrip() == self.expr:
+            return self.r
+
     def mul(self, init):
-        self.line = self.r
+        self.a = 0
+        self.b = 0
+        self.c = line
         self.r = int(self.a * self.b)
         self.expr = "{0} * {1}".format(self.a, self.b)
-        return self.expr
+        if self.c.rstrip() == self.expr:
+            return self.r
         
     def div(self, init):
-        self.line = self.r
+        self.a = 1
+        self.b = 1
+        self.c = line
         self.r = int(self.a / self.b)
+        if self.b == 0:
+            return "There is a division by zero. Cannot run!"
         self.expr = "{0} / {1}".format(self.a, self.b)
-        return self.expr
+        if self.c.rstrip() == self.expr:
+            return self.r
 
     def remainder(self, init):
-        self.line = self.r
+        self.a = 1
+        self.b = 1
+        self.c = line
         self.r = int(self.a % self.b)
         self.expr = "{0} % {1}".format(self.a, self.b)
-        return self.expr
+        if self.c.rstrip() == self.expr:
+            return self.r
 
     def floordiv(self, init):
-        self.line = self.r
+        self.a = 1
+        self.b = 1
+        self.c = line
         self.r = int(self.a // self.b)
         self.expr = "{0} // {1}".format(self.a, self.b)
-        return self.expr
+        if self.c.rstrip() == self.expr:
+            return self.r
         
 class operands:
     def entry(self, init):
@@ -79,6 +105,7 @@ class operands:
         self.r = any
         self.b = ")"
         self.expr = "{0} {1} {2}".format(self.a, self.r, self.b)
+        return True
         
     def regvar(self, init):
         self.b = "var"
@@ -87,9 +114,8 @@ class operands:
         self.c = const
         self.line = self.b and self.a
         self.expr = "{0} {1} {2}".format(self.b, self.r, self.a)
-        vars.append(self.a.value)
-        vars.append(self.r.name)
-        return self.expr
+        vars.update({"{0}".format(self.r): (self.a, self.c)})
+        return True
         
     def fixvar(self, init):
         self.b = "fvar"
@@ -98,23 +124,25 @@ class operands:
         self.c = const
         self.line = self.b and self.a
         self.expr = "{0} {1} {2}".format(self.b, self.r, self.a)
-        vars.append(self.a.value)
-        vars.append(self.r.name)
-        vars.append(self.c.const)
-        return self.expr
+        vars.update({"{0}".format(self.r): (self.a, self.c)})
+        return True
+
 
     def ampersand(self, init):
+        self.line = line
         self.r = self.a, "&", self.b
         self.line = self.r
         self.expr = "{0} {1}".format(self.r, self.a)
-        return self.expr
+        return True
+
     
     def log(self, init):
-        self.method = operands.parentheses
-        self.a = any
+        self.a = "("
+        self.b = ")"
         self.r = line
-        self.expr = "log{0}{1}{2})".format(self.method.a, self.r, self.method.b)
-        print(self.expr)
+        self.expr = "log{0}{1}{2}".format(self.a, self.r, self.b)
+        print(self.r and self.expr)
+        return True
         """
         if self.a == str:
             print(self.r)
@@ -140,37 +168,44 @@ class type:
         self.pscT = pscT
         self.pscF = pscF
         self.pscN = pscN
+        self.line = line
     
     def typebool(self, init):
-        if self.pscT in line:
-            return True
-        elif self.pscF in line:
+        self.r = line
+        if self.r.rstrip() == "true":
+            return self.pscT
+        elif self.r.rstrip() == "false":
+            return self.pscF
+        else:
             return False
-        elif self.pscN in line:
-            return None
-        else:
-            return 0
-            
+        
     def typenum(self, init):
-        if self.pscint in line:
-            return int()
-        elif self.pscfloat in line:
-            return float()
+        self.r = line
+        if self.r.rstrip() == "decimal":
+            return self.pscfloat
+        elif self.r.rstrip() == "number":
+            return self.pscint
         else:
-            return 0
-            
+            return False
+        
     def typestr(self, init):
-        if self.pscstr in line:
-            return str()
-        else:
-            return 0
+        self.r = line
+        if self.r.rstrip() == "text":
+            return self.pscstr
+
+    def typenone(self, init):
+        self.r = line
+        if self.r.rstrip() == "nothing":
+            return self.pscN
+        
+
 
 """"""
 type_inst = type()
 math_inst = math()
 ops_inst = operands()
 
-def interpret(line):
+def interpret(expr):
     methods = {
     # Key
     "parentheses": ops_inst.parentheses,
@@ -179,6 +214,7 @@ def interpret(line):
     "bool": type_inst.typebool,
     "int": type_inst.typenum,
     "str": type_inst.typestr,
+
 
     # Math
     "add": math_inst.add,
@@ -190,19 +226,19 @@ def interpret(line):
     "line": math_inst.entry,
 
     # Operands
-    "log": ops_inst.log,
-    "regvar": ops_inst.regvar,
-    "fixvar": ops_inst.fixvar,
+    "log()": ops_inst.log,
+    "var": ops_inst.regvar,
+    "fvar": ops_inst.fixvar,
     }
-    for line in contents:
-        print(line)
-        for method in methods:
-            if line.isidentifier() and hasattr(methods[method], line):
-                return method
-            else:
-                return method and False and exit
-                
-    """
+    ops_inst.log(any)
+    """ 
+     for line in methods:
+        # print("method:", line)
+        a = any
+        methods[line](a)
+        print(ops_inst.log(a))
+
+    return False 
     for line in contents:
         for line in methods:
             return methods
@@ -239,13 +275,7 @@ def interpret(line):
 def execute():
     print("Starting..")
     with open(testscript, "r") as f:
-        print(line)
-        interpret(line)
-            # calc(line)
+        for script_line in f:
+            print(script_line.rstrip())
+            interpret(script_line)
 execute()
-name = any
-value = any
-const = any
-vars = [
-    {name, value, const}
-]
