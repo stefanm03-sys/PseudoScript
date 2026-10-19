@@ -8,7 +8,6 @@ fname = "script"
 pack = "./pscpackage"
 testscript = "./examplescript.psc"
 standard = "./.psc"
-line = " "
 
 # These are the strings for the types in psc.
 pscint = "number"
@@ -30,24 +29,21 @@ class math:
         self.b = init
         self.r = int(self.a + self.b)
         self.expr = "{0} + {1}".format(self.a, self.b)
-        if self.c.rstrip() == self.expr:
-            return self.r
+        return self.r
 
     def sub(self, init):
         self.a = self
         self.b = init
         self.r = int(self.a - self.b)
         self.expr = "{0} - {1}".format(self.a, self.b)
-        if self.c.rstrip() == self.expr:
-            return self.r
+        return self.r
 
     def mul(self, init):
         self.a = self
         self.b = init
         self.r = int(self.a * self.b)
         self.expr = "{0} * {1}".format(self.a, self.b)
-        if self.c.rstrip() == self.expr:
-            return self.r
+        return self.r
         
     def div(self, init):
         self.a = self
@@ -55,8 +51,8 @@ class math:
         self.r = int(self.a / self.b)
         if self.b == 0:
             return "There is a division by zero. Cannot run!"
-        self.expr = "{0} / {1}".format(self.a, self.b)
-        if self.c.rstrip() == self.expr:
+        else:
+            self.expr = "{0} / {1}".format(self.a, self.b)
             return self.r
 
     def remainder(self, init):
@@ -64,8 +60,7 @@ class math:
         self.b = init
         self.r = int(self.a % self.b)
         self.expr = "{0} % {1}".format(self.a, self.b)
-        if self.c.rstrip() == self.expr:
-            return self.r
+        return self.r
 
     def floordiv(self, init):
         self.a = self
