@@ -6,6 +6,6 @@ echo "Welcome to PseudoScript!"
 echo "Select a command:"
 
 select choice in Script Execute Exit; do case choice in
-    Script) 
+    Script) grep -i 
 
 
