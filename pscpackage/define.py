@@ -8,6 +8,7 @@ fname = "script"
 pack = "./pscpackage"
 testscript = "./examplescript.psc"
 standard = "./.psc"
+output = any
 
 # These are the strings for the types in psc.
 pscint = "number"
@@ -115,8 +116,7 @@ class operands:
         self.a = self
         self.b = any
         self.expr = "log({0})".format(init)
-        # print(init)
-        return None
+        print(init)
 
     def comment(self, init):
         self.line = line
@@ -162,7 +162,8 @@ class type:
         self.r = line
         if self.r.rstrip() == "nothing":
             return self.pscN
-        
+types = type()
+
 
 
 with open(testscript, "r") as f:
@@ -189,29 +190,28 @@ def oper(line):
             continue
         elif line.startswith("log(") and line.endswith(")"):
             val = line[4:-1].strip().strip("\"'")
-            ops.log(val)
-            print(val)
-            break
+            execOut(val)
         elif line.startswith("var"):
             ops.regvar(line)
         elif line.startswith("constant"):
             ops.fixvar(line)
 
 def execIn():
-    print("[ Starting.. ]")
-    print()
+    print("[ Starting... ]")
     for line in contents:
-        print(line)
+        # print(line)
         if line is math:
             calc(line)
-            oper(line)
+            break
         else:
             oper(line)
-    print()
-    print("^^^ Input ^^^")
-    print("vvv Output vvv")
+            break
 
-
+def execOut(any):
+    print(any)
+    print("^^^ Output ^^^")
+    pass
+print(output)
 name = any
 value = any
 const = any
@@ -219,7 +219,6 @@ vars = [
     {"variable": name, "stored-value": value, "fixed": const}
 ]
 execIn()
-print()
 print("vvv Stored Variables vvv")
 print("{0}".format(vars))
 print("[ ended... ]")
