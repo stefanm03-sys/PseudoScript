@@ -1,5 +1,6 @@
 import pathlib
 import os.path
+import inspect
 # This is the building block of pseudoscript to define all of the code.
 
 fext = ".psc"
@@ -29,35 +30,42 @@ class math:
         self.b = init
         self.r = int(self.a + self.b)
         self.expr = "{0} + {1}".format(self.a, self.b)
-        return self.expr
+        if self.c.rstrip() == self.expr:
+            return self.r
 
     def sub(self, init):
         self.a = self
         self.b = init
         self.r = int(self.a - self.b)
         self.expr = "{0} - {1}".format(self.a, self.b)
-        return self.expr
-        
+        if self.c.rstrip() == self.expr:
+            return self.r
+
     def mul(self, init):
         self.a = self
         self.b = init
         self.r = int(self.a * self.b)
         self.expr = "{0} * {1}".format(self.a, self.b)
-        return self.expr
+        if self.c.rstrip() == self.expr:
+            return self.r
         
     def div(self, init):
         self.a = self
         self.b = init
         self.r = int(self.a / self.b)
+        if self.b == 0:
+            return "There is a division by zero. Cannot run!"
         self.expr = "{0} / {1}".format(self.a, self.b)
-        return self.expr
+        if self.c.rstrip() == self.expr:
+            return self.r
 
     def remainder(self, init):
         self.a = self
         self.b = init
         self.r = int(self.a % self.b)
         self.expr = "{0} % {1}".format(self.a, self.b)
-        return self.expr
+        if self.c.rstrip() == self.expr:
+            return self.r
 
     def floordiv(self, init):
         self.a = self
@@ -130,30 +138,37 @@ class type:
         self.pscT = pscT
         self.pscF = pscF
         self.pscN = pscN
+        self.line = line
     
     def typebool(self, init):
-        if self.pscT in line:
-            return True
-        elif self.pscF in line:
+        self.r = line
+        if self.r.rstrip() == "true":
+            return self.pscT
+        elif self.r.rstrip() == "false":
+            return self.pscF
+        else:
             return False
-        elif self.pscN in line:
-            return None
-        else:
-            return 0
-            
+        
     def typenum(self, init):
-        if self.pscint in line:
-            return int()
-        elif self.pscfloat in line:
-            return float()
+        self.r = line
+        if self.r.rstrip() == "decimal":
+            return self.pscfloat
+        elif self.r.rstrip() == "number":
+            return self.pscint
         else:
-            return 0
-            
+            return False
+        
     def typestr(self, init):
-        if self.pscstr in line:
-            return str()
-        else:
-            return 0
+        self.r = line
+        if self.r.rstrip() == "text":
+            return self.pscstr
+
+    def typenone(self, init):
+        self.r = line
+        if self.r.rstrip() == "nothing":
+            return self.pscN
+        
+
 
 with open(testscript, "r") as f:
     contents = f.read()
