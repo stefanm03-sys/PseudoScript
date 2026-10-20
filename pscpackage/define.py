@@ -17,6 +17,10 @@ pscstr = "text"
 pscT = "true"
 pscF = "false"
 pscN = "nothing"
+name = any
+value = any
+const = any
+
 class math:
     def entry(self, init):
         self.a = self
@@ -80,29 +84,30 @@ class operands:
         
     def regvar(self, init):
         self.b = "var"
-        self.a = init
-        self.r = self
-        self.line = self.b and self.a
-        self.expr = "{0} {1} {2}".format(self.b, self.r, self.a)
-        name = self.r
-        value = self.a
-        const = True
-        vars  = []
+        j = init.split()
+        if len(j) != 3 or j[0] != self.b:
+            raise ValueError("Uh oh! No variable!")
+        name = j[1]
+        init = j[2]
+        value = init
+        # var_expr = "{0} {1} {2}".format(self.b, name, init)
+        const = False
         vars.append([name, value, const])
-        return self.expr
+        return False
         
     def fixvar(self, init):
-        self.b = "var"
-        self.a = init
-        self.r = self
-        self.line = self.b and self.a
-        self.expr = "{0} {1} {2}".format(self.b, self.r, self.a)
-        name = self.r
-        value = self.a
-        const = True
-        vars  = []
+        self.b = "constant"
+        j = init.split()
+        if len(j) != 3 or j[0] != self.b:
+            raise ValueError("Uh oh! No variable!")
+        name = j[1]
+        if init != init:
+            raise ValueError("Hey! You cannot change that constant!")
+        init = j[2]
+        value = init
+        # var_expr = "{0} {1} {2}".format(self.b, name, init)
         vars.append([name, value, const])
-        return self.expr
+        return False
 
     def ampersand(self, init):
         self.r = self
@@ -125,6 +130,7 @@ class operands:
         if self.a and self.r:
             return print(str(self.a and self.r))
 ops = operands()
+
 class type:
     def entry(self, init):
         self.pscint = pscint
@@ -142,7 +148,7 @@ class type:
         elif self.r.rstrip() == "false":
             return self.pscF
         else:
-            return False
+            return None
         
     def typenum(self, init):
         self.r = line
@@ -151,12 +157,14 @@ class type:
         elif self.r.rstrip() == "number":
             return self.pscint
         else:
-            return False
+            return None
         
     def typestr(self, init):
         self.r = line
         if self.r.rstrip() == "text":
             return self.pscstr
+        else:
+            return None
 
     def typenone(self, init):
         self.r = line
@@ -164,61 +172,50 @@ class type:
             return self.pscN
 types = type()
 
-
-
 with open(testscript, "r") as f:
     contents = f.read()
     contents = contents.splitlines()
     line = f.readline()
 
 def calc(line):
-    line = math.entry
-    for line in contents:
-        calculate.add(line)
-        calculate.sub(line)
-        calculate.mul(line)
-        calculate.div(line)
-        calculate.floordiv(line)
-        calculate.remainder(line)
+    # line = math.entry
+    calculate.add(line)
+    calculate.sub(line)
+    calculate.mul(line)
+    calculate.div(line)
+    calculate.floordiv(line)
+    calculate.remainder(line)
 
 def oper(line):
-    line = operands.entry
-    for line in contents:
-        # ops.ampersand(line)
-        if "//" in line:
-            str(line)
-            continue
-        elif line.startswith("log(") and line.endswith(")"):
-            val = line[4:-1].strip().strip("\"'")
-            execOut(val)
-        elif line.startswith("var"):
-            ops.regvar(line)
-        elif line.startswith("constant"):
-            ops.fixvar(line)
+    # line = operands.entry
+    if "//" in line:
+        str(line)
+        return
+    if line.startswith("log(") and line.endswith(")"):
+        val = line[4:-1].strip().strip("\"'")
+        print(val)
+    if line.startswith("var"):
+        ops.regvar(line)
+    if line.startswith("constant"):
+        ops.fixvar(line)
 
 def execIn():
-    print("[ Starting... ]")
     for line in contents:
-        # print(line)
         if line is math:
             calc(line)
-            break
         else:
             oper(line)
-            break
+        print(line)
 
 def execOut(any):
     print(any)
-    print("^^^ Output ^^^")
     pass
-print(output)
-name = any
-value = any
-const = any
-vars = [
-    {"variable": name, "stored-value": value, "fixed": const}
-]
+
+# print(output)
+print("[ Starting... ]")
 execIn()
+
+print("^^^ In / Out ^^^")
 print("vvv Stored Variables vvv")
 print("{0}".format(vars))
 print("[ ended... ]")
