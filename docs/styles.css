@@ -13,3 +13,9 @@ h1, h2, ul, li, p {
     margin-right: 2vw;
     text-align: center !;
 }
+
+a {
+    outline: solid;
+    text-align: center;
+    margin-top: 10px;
+}
