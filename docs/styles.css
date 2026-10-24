@@ -1,6 +1,6 @@
 body {
-    margin: 0, auto;
-    padding: 0, auto;
+    margin: 5em auto;
+    padding: 5em;
 }
 
 h1, h2, ul, li, p {
@@ -11,7 +11,7 @@ h1, h2, ul, li, p {
     outline: solid;
     width: 95vw;
     margin-right: 2vw;
-    text-align: center !;
+    text-align: center;
 }
 
 a {
