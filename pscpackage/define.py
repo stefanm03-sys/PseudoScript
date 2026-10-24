@@ -11,18 +11,20 @@ standard = "./.psc"
 output = any
 
 # These are the strings for the types in psc.
-pscint = "number"
-pscfloat = "decimal"
-pscstr = "text"
-pscT = "true"
-pscF = "false"
-pscN = "nothing"
+pscint = "number" # Thi is the integer type.
+pscfloat = "decimal" # This is the floating point number type.
+pscstr = "text" # This is the string type.
+pscT = "true" # The string value for the boolean True.
+pscF = "false" # The string value for the boolean False.
+pscN = "nothing" # As before, this is the type for None.
 name = any
 value = any
 const = any
 
-class math:
-    def entry(self, init):
+class math: # This defines the class for mathematical operations.
+    # init: One value used for mathematical numbers.
+    # self: The other value used for math operations.
+    def entry(self, init): 
         self.a = self
         self.b = init
         self.r = int
@@ -54,7 +56,7 @@ class math:
         self.a = self
         self.b = init
         self.r = int(self.a / self.b)
-        if self.b == 0:
+        if self.b or self.a == 0:
             return "There is a division by zero. Cannot run!"
         else:
             self.expr = "{0} / {1}".format(self.a, self.b)
@@ -72,9 +74,11 @@ class math:
         self.b = init
         self.r = int(self.a // self.b)
         self.expr = "{0} // {1}".format(self.a, self.b)
-        return self.expr
+        return self.r
 calculate = math()        
-class operands:
+class operands: # Much like the previous class, this defines the operations instead of just math.
+    # init: The value of the parameters.
+    # self: The actual expression.
     def entry(self, init):
         self.a = init
         self.b = any
