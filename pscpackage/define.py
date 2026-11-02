@@ -11,7 +11,7 @@ standard = "./.psc"
 output = any
 
 # These are the strings for the types in psc.
-pscint = "number" # Thi is the integer type.
+pscint = "number" # This is the integer type.
 pscfloat = "decimal" # This is the floating point number type.
 pscstr = "text" # This is the string type.
 pscT = "true" # The string value for the boolean True.
@@ -87,32 +87,47 @@ class operands: # Much like the previous class, this defines the operations inst
         # operands.entry.line = self.r
         
     def regvar(self, init):
-        self.b = "var"
-        j = init.split()
-        if len(j) != 3 or j[0] != self.b:
-            raise ValueError("Uh oh! No variable!")
-        name = j[1]
-        init = j[2]
-        value = init
-        # var_expr = "{0} {1} {2}".format(self.b, name, init)
+        j = vars
+        j = list()
+        i = line
+        i = line.split()
+
+        self.r = init
+        self.a = self
         const = False
-        vars.append([name, value, const])
+        self.b = "variable"
+        j.append([self.r, self.a, const])
+        print(j)
+        if name not in j:
+            return NameError("Variable not found..")
+        # var_expr = "{0} {1} {2}".format(self.b, name, init)
         return False
         
     def fixvar(self, init):
+        vars = list()
         self.b = "constant"
-        j = init.split()
-        if len(j) != 3 or j[0] != self.b:
-            raise ValueError("Uh oh! No variable!")
+        line = any
+        j = line.split()
         name = j[1]
-        if init != init:
-            raise ValueError("Hey! You cannot change that constant!")
         init = j[2]
+        const = True
         value = init
-        # var_expr = "{0} {1} {2}".format(self.b, name, init)
+        print(j)
+        if name not in vars:
+            return NameError("Variable not found..")
         vars.append([name, value, const])
+        # var_expr = "{0} {1} {2}".format(self.b, name, init)
         return False
 
+    """ def reassign(self, init):
+        self.b = any
+        if self.b == "variable":
+            operands.regvar(self, init)
+        elif self.b == "constant":
+            return ValueError("This is a constant..")
+
+        pass; "This is assigned! Continue.." """
+        
     def ampersand(self, init):
         self.r = self
         self.a = init
@@ -191,14 +206,13 @@ def calc(line):
     calculate.remainder(line)
 
 def oper(line):
-    # line = operands.entry
     if "//" in line:
         str(line)
         return
     if line.startswith("log(") and line.endswith(")"):
         val = line[4:-1].strip().strip("\"'")
         print(val)
-    if line.startswith("var"):
+    if line.startswith("variable"):
         ops.regvar(line)
     if line.startswith("constant"):
         ops.fixvar(line)
@@ -216,13 +230,17 @@ def execOut(any):
     pass
 
 # print(output)
+print()
 print("[ Starting... ]")
-execIn()
+# execIn()
+
+line = "variable b 1" # Line reading test
+ops.regvar(line) # Var test
 
 print("^^^ In / Out ^^^")
 print("vvv Stored Variables vvv")
 print("{0}".format(vars))
-print("[ ended... ]")
+print("[ Ended... ]")
 """
 print("\n")
 oper(line)
