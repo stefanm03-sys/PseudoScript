@@ -3,12 +3,13 @@ import os.path
 import inspect
 # This is the building block of pseudoscript to define all of the code.
 
+# These are some file placeholders.
 fext = ".psc"
 fname = "script"
 pack = "./pscpackage"
 testscript = "./examplescript.psc"
 standard = "./.psc"
-output = any
+output = any # The output of the script.
 
 # These are the strings for the types in psc.
 pscint = "number" # This is the integer type.
@@ -17,9 +18,13 @@ pscstr = "text" # This is the string type.
 pscT = "true" # The string value for the boolean True.
 pscF = "false" # The string value for the boolean False.
 pscN = "nothing" # As before, this is the type for None.
-name = any
-value = any
-const = any
+
+# These are some placeholder values.
+name = any # The name of a variable.
+value = any # The value of a variable.
+const = any # Whether the variable is a constant.
+vars = any # The list of variables.
+line = any # The line in any file.
 
 class math: # This defines the class for mathematical operations.
     # init: One value used for mathematical numbers.
@@ -57,7 +62,7 @@ class math: # This defines the class for mathematical operations.
         self.b = init
         self.r = int(self.a / self.b)
         if self.b or self.a == 0:
-            return "There is a division by zero. Cannot run!"
+            raise ZeroDivisionError("There is a division by zero! Cannot express: {0}".format(self.r))
         else:
             self.expr = "{0} / {1}".format(self.a, self.b)
             return self.r
@@ -86,39 +91,20 @@ class operands: # Much like the previous class, this defines the operations inst
         self.r = any
         # operands.entry.line = self.r
         
-    def regvar(self, init):
-        j = vars
-        j = list()
-        i = line
-        i = line.split()
-
-        self.r = init
-        self.a = self
-        const = False
-        self.b = "variable"
-        j.append([self.r, self.a, const])
-        print(j)
-        if name not in j:
-            return NameError("Variable not found..")
-        # var_expr = "{0} {1} {2}".format(self.b, name, init)
-        return False
-        
-    def fixvar(self, init):
+    def varAsg(self, init, const):
+        # self.r/init here is the expression line
+        print(init)
+        b = init.rstrip()
         vars = list()
-        self.b = "constant"
-        line = any
-        j = line.split()
-        name = j[1]
-        init = j[2]
-        const = True
-        value = init
-        print(j)
-        if name not in vars:
-            return NameError("Variable not found..")
+        name = b[0]
+        value = b[2]
+        const = any
         vars.append([name, value, const])
+        # if name not in j:
+            # raise NameError("Variable {0} not found!".format(name))
         # var_expr = "{0} {1} {2}".format(self.b, name, init)
-        return False
-
+        return vars
+        
     """ def reassign(self, init):
         self.b = any
         if self.b == "variable":
@@ -194,7 +180,6 @@ types = type()
 with open(testscript, "r") as f:
     contents = f.read()
     contents = contents.splitlines()
-    line = f.readline()
 
 def calc(line):
     # line = math.entry
@@ -206,6 +191,8 @@ def calc(line):
     calculate.remainder(line)
 
 def oper(line):
+    if " " in line:
+        line = line.replace(" ", "/n")
     if "//" in line:
         str(line)
         return
@@ -213,9 +200,9 @@ def oper(line):
         val = line[4:-1].strip().strip("\"'")
         print(val)
     if line.startswith("variable"):
-        ops.regvar(line)
+        ops.varAsg(line, False)
     if line.startswith("constant"):
-        ops.fixvar(line)
+        ops.varAsg(line, True)
 
 def execIn():
     for line in contents:
@@ -229,19 +216,21 @@ def execOut(any):
     print(any)
     pass
 
-# print(output)
+print(output)
 print()
 print("[ Starting... ]")
-# execIn()
+execIn()
 
+"""
 line = "variable b 1" # Line reading test
 ops.regvar(line) # Var test
+"""
 
 print("^^^ In / Out ^^^")
 print("vvv Stored Variables vvv")
-print("{0}".format(vars))
+print("{0}".format(ops.varAsg(vars, None)))
 print("[ Ended... ]")
-"""
+
 print("\n")
 oper(line)
-"""
+
