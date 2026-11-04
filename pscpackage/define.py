@@ -9,7 +9,7 @@ fname = "script"
 pack = "./pscpackage"
 testscript = "./examplescript.psc"
 standard = "./.psc"
-output = any # The output of the script.
+# output = any # The output of the script.
 
 # These are the strings for the types in psc.
 pscint = "number" # This is the integer type.
@@ -18,6 +18,9 @@ pscstr = "text" # This is the string type.
 pscT = "true" # The string value for the boolean True.
 pscF = "false" # The string value for the boolean False.
 pscN = "nothing" # As before, this is the type for None.
+nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, pscfloat, pscint]
+bools = [pscT, pscF, pscN]
+strings = ["\"", pscstr, "//"]
 
 # These are some placeholder values.
 name = any # The name of a variable.
@@ -27,6 +30,46 @@ vars = list() # The list of variables.
 vars_a = list() # A placeholder for the variables.
 line = any # The line in any file.
 
+class type:
+    def entry(self, init):
+        self.pscint = pscint
+        self.pscstr = pscstr
+        self.pscfloat = pscfloat
+        self.pscT = pscT
+        self.pscF = pscF
+        self.pscN = pscN
+        self.line = line
+    
+    def typebool(self, init):
+        self.r = line
+        if self.r.rstrip() == "true":
+            return self.pscT
+        elif self.r.rstrip() == "false":
+            return self.pscF
+        else:
+            return None
+        
+    def typenum(self, init):
+        self.r = line
+        if self.r.rstrip() == "decimal":
+            return self.pscfloat
+        elif self.r.rstrip() == "number":
+            return self.pscint
+        else:
+            return None
+        
+    def typestr(self, init):
+        self.r = line
+        if self.r.rstrip() == "text":
+            return self.pscstr
+        else:
+            return None
+
+    def typenone(self, init):
+        self.r = line
+        if self.r.rstrip() == "nothing":
+            return self.pscN
+types = type()
 class math: # This defines the class for mathematical operations.
     # init: One value used for mathematical numbers.
     # self: The other value used for math operations.
@@ -96,6 +139,8 @@ class operands: # Much like the previous class, this defines the operations inst
         # self.r/init here is the expression line
         # print(init)
         global vars
+        global name
+        global value
         vars = list()
         if const == None:
             pass
@@ -144,60 +189,24 @@ class operands: # Much like the previous class, this defines the operations inst
         return self.expr
     
     def log(self, init):
-        self.r = init
-        self.a = self
-        self.b = any
-        self.expr = "log({0})".format(init)
-        print(init)
+        str(init)
+        global vars
+        self.a = init.replace("log(", " ")
+        self.a = self.a.replace(")", " ")
+        self.expr = "log({0})".format(self.a)
+        print(vars[1])
+        if self.a == vars[0]:
+            print(vars[1])
+
+        # print(self.r)
 
     def comment(self, init):
-        self.line = line
+        self.line = strings[2]
         self.r = init
-        self.a = "//"
+        self.a = strings[2]
         if self.a and self.r:
             return print(str(self.a and self.r))
 ops = operands()
-
-class type:
-    def entry(self, init):
-        self.pscint = pscint
-        self.pscstr = pscstr
-        self.pscfloat = pscfloat
-        self.pscT = pscT
-        self.pscF = pscF
-        self.pscN = pscN
-        self.line = line
-    
-    def typebool(self, init):
-        self.r = line
-        if self.r.rstrip() == "true":
-            return self.pscT
-        elif self.r.rstrip() == "false":
-            return self.pscF
-        else:
-            return None
-        
-    def typenum(self, init):
-        self.r = line
-        if self.r.rstrip() == "decimal":
-            return self.pscfloat
-        elif self.r.rstrip() == "number":
-            return self.pscint
-        else:
-            return None
-        
-    def typestr(self, init):
-        self.r = line
-        if self.r.rstrip() == "text":
-            return self.pscstr
-        else:
-            return None
-
-    def typenone(self, init):
-        self.r = line
-        if self.r.rstrip() == "nothing":
-            return self.pscN
-types = type()
 
 with open(testscript, "r") as f:
     contents = f.read()
@@ -215,11 +224,10 @@ def calc(line):
 def oper(line):
     """if " " in line:
         line = line.replace(" ", "/n") """
-    if "//" in str(line):
+    if strings[2] in str(line):
         return
     if line.startswith("log(") and line.endswith(")"):
-        val = line[4:-1].strip().strip("\"'")
-        print("--", val)
+        ops.log(line)
     if line.startswith("variable"):
         # line = line.replace()
         ops.var_asg(line, False)
