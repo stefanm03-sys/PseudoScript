@@ -23,7 +23,8 @@ pscN = "nothing" # As before, this is the type for None.
 name = any # The name of a variable.
 value = any # The value of a variable.
 const = any # Whether the variable is a constant.
-vars = any # The list of variables.
+vars = list() # The list of variables.
+vars_a = list() # A placeholder for the variables.
 line = any # The line in any file.
 
 class math: # This defines the class for mathematical operations.
@@ -91,19 +92,40 @@ class operands: # Much like the previous class, this defines the operations inst
         self.r = any
         # operands.entry.line = self.r
         
-    def varAsg(self, init, const):
+    def var_asg(self, init, const):
         # self.r/init here is the expression line
-        print(init)
-        b = init.rstrip()
+        # print(init)
+        global vars
         vars = list()
-        name = b[0]
-        value = b[2]
+        if const == None:
+            pass
+        b = init.replace("/n", " ")
+        a = b.split(" ")
+        # print(a)
+        name = a[1]
+        value = a[2]
         const = any
-        vars.append([name, value, const])
+        if a[0] == "variable":
+            const = False
+            vars.append([name, value, const])
+            return vars
+        else:
+            const = True
+            vars.append([name, value, const])
+            if value != value:
+                raise ValueError("Error! This is a constant.")
+            return vars
         # if name not in j:
             # raise NameError("Variable {0} not found!".format(name))
         # var_expr = "{0} {1} {2}".format(self.b, name, init)
         return vars
+
+    """ def var_store(self, init):
+        init = operands.var_asg
+        store = init
+        print(store)
+        if store:
+            return store """
         
     """ def reassign(self, init):
         self.b = any
@@ -191,18 +213,19 @@ def calc(line):
     calculate.remainder(line)
 
 def oper(line):
-    if " " in line:
-        line = line.replace(" ", "/n")
-    if "//" in line:
-        str(line)
+    """if " " in line:
+        line = line.replace(" ", "/n") """
+    if "//" in str(line):
         return
     if line.startswith("log(") and line.endswith(")"):
         val = line[4:-1].strip().strip("\"'")
-        print(val)
+        print("--", val)
     if line.startswith("variable"):
-        ops.varAsg(line, False)
+        # line = line.replace()
+        ops.var_asg(line, False)
     if line.startswith("constant"):
-        ops.varAsg(line, True)
+        ops.var_asg(line, True)
+        
 
 def execIn():
     for line in contents:
@@ -216,7 +239,7 @@ def execOut(any):
     print(any)
     pass
 
-print(output)
+# print(output)
 print()
 print("[ Starting... ]")
 execIn()
@@ -228,9 +251,7 @@ ops.regvar(line) # Var test
 
 print("^^^ In / Out ^^^")
 print("vvv Stored Variables vvv")
-print("{0}".format(ops.varAsg(vars, None)))
+print("{0}".format(vars))
 print("[ Ended... ]")
-
 print("\n")
-oper(line)
 
