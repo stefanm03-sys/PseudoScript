@@ -27,9 +27,13 @@ name = any # The name of a variable.
 value = any # The value of a variable.
 const = any # Whether the variable is a constant.
 vars = list() # The list of variables.
-vars_a = list() # A placeholder for the variables.
+vars_a = list() # An unused placeholder for the variables.
 line = any # The line in any file.
 
+def condRun():
+
+
+    return bool
 class type:
     def entry(self, init):
         self.pscint = pscint
@@ -192,10 +196,10 @@ class operands: # Much like the previous class, this defines the operations inst
         str(init)
         global vars
         self.a = init.replace("log(", " ")
-        self.a = self.a.replace(")", " ")
         self.expr = "log({0})".format(self.a)
         print(vars[1])
         if self.a == vars[0]:
+            self.a = self.a.replace(")", " ")
             print(vars[1])
 
         # print(self.r)
@@ -206,14 +210,28 @@ class operands: # Much like the previous class, this defines the operations inst
         self.a = strings[2]
         if self.a and self.r:
             return print(str(self.a and self.r))
+    
+    def conditional(self, init):
+        print(init)
+        global vars
+        self.b = self
+        print(self.b)
+        self.a = f'when ({self.b})' + ' {'
+        self.r = list()
+        self.c = "}"
+
+            
+
 ops = operands()
 
 with open(testscript, "r") as f:
     contents = f.read()
     contents = contents.splitlines()
+    print(contents)
 
 def calc(line):
     # line = math.entry
+    # if line.startswith("")
     calculate.add(line)
     calculate.sub(line)
     calculate.mul(line)
@@ -227,7 +245,10 @@ def oper(line):
     if strings[2] in str(line):
         return
     if line.startswith("log(") and line.endswith(")"):
-        ops.log(line)
+        if vars not in line:
+            pass
+        else:
+            ops.log(line)
     if line.startswith("variable"):
         # line = line.replace()
         ops.var_asg(line, False)
@@ -256,6 +277,12 @@ execIn()
 line = "variable b 1" # Line reading test
 ops.regvar(line) # Var test
 """
+line = """
+when (1 > 0) {
+log("what?")
+}
+"""
+ops.conditional(line)
 
 print("^^^ In / Out ^^^")
 print("vvv Stored Variables vvv")
